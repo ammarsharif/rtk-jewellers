@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0f0e17">
+    <meta name="theme-color" content="#0f0e17" id="themeColorMeta">
     <meta name="description" content="RTK JEWL ART — Professional Jewelry Billing System, Sadiq Abad">
     <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlJUSyBKRVdMIEFSVCIsCiAgInNob3J0X25hbWUiOiAiUlRLIEpld2VsIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZjBlMTciLAogICJ0aGVtZV9jb2xvciI6ICIjMGYwZTE3Igp9">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
 
 <style>
 /* ============================================================
-   DESIGN TOKENS
+   DESIGN TOKENS  —  Shared (always)
    ============================================================ */
 :root {
     --gold:         #C9963A;
@@ -25,22 +25,59 @@
     --gold-glow:    rgba(201,150,58,.22);
     --silver:       #AAB8C8;
     --silver-light: #D6E4F0;
+    --r-sm:  8px;
+    --r-md:  14px;
+    --r-lg:  22px;
+    --r-xl:  30px;
+    --ease:  cubic-bezier(.4,0,.2,1);
+}
+
+/* ── DARK THEME (default) ── */
+[data-theme="dark"] {
     --bg:           #0b0b14;
     --bg-card:      #131320;
     --bg-surface:   #1b1b2e;
     --bg-input:     #12121f;
+    --bg-topbar:    rgba(11,11,20,.88);
     --border:       rgba(201,150,58,.2);
     --border-soft:  rgba(255,255,255,.07);
     --txt:          #EEF0F5;
     --txt-muted:    #7A85A0;
     --txt-gold:     #C9963A;
-    --r-sm:  8px;
-    --r-md:  14px;
-    --r-lg:  22px;
-    --r-xl:  30px;
-    --sh-gold:  0 4px 28px rgba(201,150,58,.22);
-    --sh-card:  0 10px 40px rgba(0,0,0,.55);
-    --ease:  cubic-bezier(.4,0,.2,1);
+    --sh-gold:      0 4px 28px rgba(201,150,58,.22);
+    --sh-card:      0 10px 40px rgba(0,0,0,.55);
+    --body-grad1:   rgba(201,150,58,.11);
+    --body-grad2:   rgba(100,80,200,.07);
+    --rinput-focus: rgba(201,150,58,.08);
+    --net-val-color:    #7FD49A;
+    --divider-line: rgba(255,255,255,.07);
+    --totalurdu-border: rgba(255,255,255,.06);
+    --tbl-row-border:   rgba(255,255,255,.04);
+    --theme-icon: "🌙";
+}
+
+/* ── LIGHT THEME ── */
+[data-theme="light"] {
+    --bg:           #F5F3EE;
+    --bg-card:      #FFFFFF;
+    --bg-surface:   #F0EDE6;
+    --bg-input:     #FAF8F4;
+    --bg-topbar:    rgba(255,252,245,.92);
+    --border:       rgba(180,130,40,.3);
+    --border-soft:  rgba(0,0,0,.09);
+    --txt:          #1A1610;
+    --txt-muted:    #7A6E58;
+    --txt-gold:     #A07420;
+    --sh-gold:      0 4px 28px rgba(180,130,40,.18);
+    --sh-card:      0 8px 32px rgba(0,0,0,.08);
+    --body-grad1:   rgba(201,150,58,.07);
+    --body-grad2:   rgba(120,100,230,.04);
+    --rinput-focus: rgba(201,150,58,.06);
+    --net-val-color:    #2A8A50;
+    --divider-line: rgba(0,0,0,.09);
+    --totalurdu-border: rgba(0,0,0,.08);
+    --tbl-row-border:   rgba(0,0,0,.05);
+    --theme-icon: "☀️";
 }
 
 /* ============================================================
@@ -52,14 +89,28 @@ input,textarea,select,span[id]{-webkit-user-select:text;user-select:text;}
 /* ============================================================
    BODY / SHELL
    ============================================================ */
+/* ── Smooth theme transitions ── */
+html {
+    transition: color-scheme .35s;
+}
+*, *::before, *::after {
+    transition-property: background, background-color, border-color, color, box-shadow;
+    transition-duration: .28s;
+    transition-timing-function: var(--ease);
+}
+/* But don't kill pre-existing transitions on interactive elements */
+.btn, .mbtn, .card, .finput, .tmr-box, .cam-sub-btn {
+    transition: all .22s var(--ease);
+}
+
 body{
     margin:0;padding:0;min-height:100vh;
     font-family:'Inter',sans-serif;
     background:var(--bg);
     color:var(--txt);
     background-image:
-        radial-gradient(ellipse 70% 55% at 50% -5%, rgba(201,150,58,.11) 0%, transparent 65%),
-        radial-gradient(ellipse 40% 30% at 90% 95%, rgba(100,80,200,.07) 0%, transparent 60%);
+        radial-gradient(ellipse 70% 55% at 50% -5%, var(--body-grad1) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 30% at 90% 95%, var(--body-grad2) 0%, transparent 60%);
 }
 .app{display:flex;flex-direction:column;min-height:100vh;}
 
@@ -68,11 +119,130 @@ body{
    ============================================================ */
 .topbar{
     position:sticky;top:0;z-index:200;
-    background:rgba(11,11,20,.88);
+    background:var(--bg-topbar);
     backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
     border-bottom:1px solid var(--border);
     padding:11px 20px;
     display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+
+/* ═══════════════════════════════════════
+   THEME TOGGLE  —  Premium Pill Switch
+   ═══════════════════════════════════════ */
+.theme-toggle-wrap{
+    display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+
+/* The track */
+.theme-toggle{
+    position:relative;
+    width:72px;height:32px;
+    border-radius:50px;
+    border:none;outline:none;
+    cursor:pointer;padding:0;
+    flex-shrink:0;
+    /* Dark-mode track: deep midnight blue */
+    background:linear-gradient(135deg,#1a1a3e 0%,#0d1b4b 100%);
+    box-shadow:
+        inset 0 2px 6px rgba(0,0,0,.4),
+        0 0 0 1.5px rgba(201,150,58,.25);
+    transition: background .4s var(--ease), box-shadow .3s var(--ease);
+}
+.theme-toggle:hover{
+    box-shadow:
+        inset 0 2px 6px rgba(0,0,0,.4),
+        0 0 0 2.5px var(--gold),
+        0 0 14px rgba(201,150,58,.3);
+}
+/* Light-mode track: warm sky */
+[data-theme="light"] .theme-toggle{
+    background:linear-gradient(135deg,#87CEEB 0%,#FDB813 100%);
+    box-shadow:
+        inset 0 2px 6px rgba(0,0,0,.15),
+        0 0 0 1.5px rgba(180,130,40,.3);
+}
+[data-theme="light"] .theme-toggle:hover{
+    box-shadow:
+        inset 0 2px 6px rgba(0,0,0,.15),
+        0 0 0 2.5px #FDB813,
+        0 0 14px rgba(253,184,19,.4);
+}
+
+/* Stars decoration (dark mode only) */
+.theme-toggle::after{
+    content:'';
+    position:absolute;
+    top:6px;left:8px;
+    width:4px;height:4px;border-radius:50%;
+    background:#fff;
+    box-shadow:
+        10px  2px 0 1px rgba(255,255,255,.8),
+        18px -1px 0 .5px rgba(255,255,255,.5),
+         5px  8px 0 .5px rgba(255,255,255,.4);
+    opacity:1;
+    transition:opacity .35s var(--ease);
+}
+[data-theme="light"] .theme-toggle::after{
+    opacity:0;
+}
+
+/* The sliding knob */
+.tgl-knob{
+    position:absolute;
+    top:4px;left:4px;
+    width:24px;height:24px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;
+    line-height:1;
+    /* Dark knob: glowing moon */
+    background:linear-gradient(135deg,#2b2d6e,#4a4fbf);
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.5),
+        0 0 12px rgba(120,130,255,.5);
+    transition:
+        transform .4s cubic-bezier(.34,1.56,.64,1),
+        background .35s var(--ease),
+        box-shadow .35s var(--ease);
+    pointer-events:none;
+    user-select:none;
+}
+[data-theme="light"] .tgl-knob{
+    transform:translateX(40px);
+    /* Light knob: sunny */
+    background:linear-gradient(135deg,#FFD700,#FFF176);
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.2),
+        0 0 16px rgba(255,215,0,.7);
+}
+
+/* Moon icon — shown in dark mode */
+.tgl-moon{
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;line-height:1;
+    transition:opacity .25s var(--ease), transform .25s var(--ease);
+    position:absolute;
+}
+.tgl-sun{
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;line-height:1;
+    opacity:0;transform:rotate(-45deg) scale(.5);
+    transition:opacity .25s var(--ease), transform .25s var(--ease);
+    position:absolute;
+}
+[data-theme="light"] .tgl-moon{
+    opacity:0;transform:rotate(45deg) scale(.5);
+}
+[data-theme="light"] .tgl-sun{
+    opacity:1;transform:rotate(0deg) scale(1);
+}
+
+/* Side labels */
+.tgl-label{
+    font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--txt-muted);font-family:'Inter',sans-serif;
+    user-select:none;pointer-events:none;white-space:nowrap;
+    transition:color .3s var(--ease);
 }
 .tb-brand{display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .tb-gem{
@@ -242,7 +412,7 @@ body{
     border-bottom:1px solid var(--border);
     font-family:'Noto Nastaliq Urdu',serif;font-size:12px;
 }
-.tbl-wrap td{padding:6px 6px;border-bottom:1px solid rgba(255,255,255,.04);}
+.tbl-wrap td{padding:6px 6px;border-bottom:1px solid var(--tbl-row-border);}
 .tbl-wrap tr:last-child td{border-bottom:none;}
 .rinput{
     border:none;width:100%;height:34px;font-size:13px;
@@ -251,10 +421,10 @@ body{
     border-radius:6px;transition:background .2s;
     -webkit-user-select:text;
 }
-.rinput:focus{background:rgba(201,150,58,.08);}
+.rinput:focus{background:var(--rinput-focus);}
 .net-val{
     font-weight:700;font-size:15px;font-family:'JetBrains Mono',monospace;
-    color:#7FD49A;text-align:center;display:block;padding:6px 0;
+    color:var(--net-val-color);text-align:center;display:block;padding:6px 0;
 }
 
 /* ============================================================
@@ -304,7 +474,7 @@ body{
     font-family:'Noto Nastaliq Urdu',serif;font-size:13px;
     color:var(--txt-muted);text-align:right;
     margin-top:9px;padding-top:9px;
-    border-top:1px solid rgba(255,255,255,.06);
+    border-top:1px solid var(--totalurdu-border);
     line-height:1.7;min-height:24px;
 }
 
@@ -316,7 +486,7 @@ body{
    DIVIDER
    ============================================================ */
 .divider{display:flex;align-items:center;gap:10px;margin:4px 0 14px;}
-.divider-line{flex:1;height:1px;background:var(--border-soft);}
+.divider-line{flex:1;height:1px;background:var(--divider-line);}
 .divider-txt{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--txt-muted);white-space:nowrap;}
 
 /* ============================================================
@@ -613,6 +783,16 @@ video{width:100%;display:none;background:#000;border-radius:var(--r-md);margin-t
         <div class="pill">
             INV&nbsp;<input type="text" id="invNum" aria-label="Invoice Number">
         </div>
+        <div class="theme-toggle-wrap">
+            <span class="tgl-label" id="tglLabelDark">Dark</span>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark/light theme" title="Switch Theme">
+                <span class="tgl-knob">
+                    <span class="tgl-moon">🌙</span>
+                    <span class="tgl-sun">☀️</span>
+                </span>
+            </button>
+            <span class="tgl-label" id="tglLabelLight">Light</span>
+        </div>
     </div>
 </header>
 
@@ -773,6 +953,42 @@ video{width:100%;display:none;background:#000;border-radius:var(--r-md);margin-t
 </div><!-- .app -->
 
 <script>
+// ─── Theme System ───
+function updateToggleLabels(theme) {
+    const lDark  = document.getElementById('tglLabelDark');
+    const lLight = document.getElementById('tglLabelLight');
+    if (!lDark || !lLight) return;
+    if (theme === 'dark') {
+        lDark.style.color  = 'var(--gold)';
+        lLight.style.color = 'var(--txt-muted)';
+    } else {
+        lDark.style.color  = 'var(--txt-muted)';
+        lLight.style.color = '#FDB813';
+    }
+}
+
+(function () {
+    const saved = localStorage.getItem('rtkTheme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = saved || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('themeColorMeta').setAttribute('content', theme === 'dark' ? '#0b0b14' : '#F5F3EE');
+    // labels update after DOM ready
+    document.addEventListener('DOMContentLoaded', () => updateToggleLabels(theme));
+    // fallback in case script runs after DOM
+    if (document.readyState !== 'loading') updateToggleLabels(theme);
+})();
+
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('rtkTheme', next);
+    document.getElementById('themeColorMeta').setAttribute('content', next === 'dark' ? '#0b0b14' : '#F5F3EE');
+    updateToggleLabels(next);
+}
+
 // ─── Service Worker ───
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZSA9PiB7IHNlbGYuc2tpcFdhaXRpbmcoKTsgfSk7').catch(()=>{});
