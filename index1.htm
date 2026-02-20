@@ -569,8 +569,11 @@ video{width:100%;display:none;background:#000;border-radius:var(--r-md);margin-t
     .btn-cam,
     .cam-sub,
     .cam-sub-btn,
-    #capBtn,
-    #photo-wrap { display:none !important; }
+    #capBtn { display:none !important; }
+
+    /* show print-only elements */
+    .print-meta-row { display:flex !important; }
+    .print-footer   { display:block !important; }
 
     /* ── reset body ── */
     *{
@@ -748,6 +751,12 @@ video{width:100%;display:none;background:#000;border-radius:var(--r-md);margin-t
 } /* end @media print */
 
 /* ============================================================
+   PRINT-ONLY ELEMENTS — hide on screen
+   ============================================================ */
+.print-meta-row { display:none; }
+.print-footer   { display:none; }
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media(max-width:767px){
@@ -755,11 +764,27 @@ video{width:100%;display:none;background:#000;border-radius:var(--r-md);margin-t
     .bill-col{max-width:100%;}
     .total-in{font-size:30px;}
 }
-@media(max-width:400px){
-    .topbar{padding:9px 12px;}
+
+/* ── Topbar mobile tightening ── */
+@media(max-width:600px){
+    .topbar{padding:9px 10px;gap:8px;flex-wrap:nowrap;}
+    .pill{padding:4px 8px;font-size:10px;}
+    .pill input{width:44px;font-size:10px;}
+    .tgl-label{display:none;}            /* hide Dark/Light text labels */
+    .tb-name{font-size:13px;}
+    .tb-addr{display:none;}              /* hide sub-address in topbar */
+    .tb-gem{width:32px;height:32px;font-size:16px;}
+}
+
+/* ── Hide date pill on very small screens to save space ── */
+@media(max-width:480px){
+    .topbar .pill:first-child{display:none;}  /* hide clock pill */
+    .frow-2{grid-template-columns:1fr;}       /* stack 2-col form rows */
     .btn{font-size:13px;padding:11px 14px;}
     .total-in{font-size:26px;}
     .sh-name{font-size:18px;}
+    .tmr-wrap{gap:6px;}
+    .tmr-in{font-size:18px;}
 }
 </style>
 </head>
